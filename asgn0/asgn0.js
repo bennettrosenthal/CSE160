@@ -112,8 +112,10 @@ function handleDrawOperationEvent() {
       break;
     case "angle":
       console.log("Angle between: " + angleBetween(vec1, vec2));
+      break;
     case "area":
       console.log("Area of the triangle: " + areaTriangle(vec1, vec2));
+      break;
     default:
   }
 }
