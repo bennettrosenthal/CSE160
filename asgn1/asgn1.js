@@ -123,6 +123,7 @@ function setBackground() {
 
   gl.clearColor(r_val, g_val, b_val, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
+  renderAllShapes();
 }
 
 function setShape(val) {
