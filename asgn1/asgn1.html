@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Bennett Rosenthal Assignment 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="asgn1.css">
+</head>
+
+<header>
+  <div class="header-div">
+    <div class="left-text">
+      <h1>Assignment 1: Painting</h1>
+      <h3>by Bennett Rosenthal</h3>
+    </div>
+
+    <nav>
+      <a href="/asgn1.html">Painter</a>
+      <a href="/asgn1_extras.html">Sketch / Extras / Resources</a>
+    </nav>
+  </div>
+
+</header>
+
+<body onload="main()">
+
+  <div class="body-div">
+    <div class="canvas-div">
+      <canvas id="webgl" width="400" height="400">
+        Please use a browser that supports "canvas"
+      </canvas>
+    </div>
+
+    <div class="options-div">
+      <div class="clear_div">
+        <button id="clear_button" onclick="clearCanvas()">Clear Canvas</button>
+        <button id="bg_button" onclick="setBackground()">Set Canvas to Current Color</button>
+        <button id="draw_button" onclick="drawPicture()">Draw Picture</button>
+      </div>
+
+      <div class="shape_buttons_div">
+        <button id="point_button" onclick="setShape(0)">Set Shape to Point</button>
+        <button id="triangle_button" onclick="setShape(1)">Set Shape to Triangle</button>
+        <button id="circle_button" onclick="setShape(2)">Set Shape to Circle</button>
+      </div>
+
+      <div class="rgb-and-preview-div">
+        <div class="rgb_sliders_div">
+          <label for="r_slider">R</label>
+          <input type="range" id="r_slider" name="r_slider" oninput="updateColorPreview()" min="0" max="100"
+            value="100">
+
+          <label for="g_slider">G</label>
+          <input type="range" id="g_slider" name="g_slider" oninput="updateColorPreview()" min="0" max="100" value="0">
+
+          <label for="b_slider">B</label>
+          <input type="range" id="b_slider" name="b_slider" oninput="updateColorPreview()" min="0" max="100" value="0">
+        </div>
+        <canvas id="color_preview" width="50" height="50" style="border:1px solid #000000;"></canvas>
+      </div>
+
+
+      <div class="size_slider_div">
+        <label for="size_slider">Size:</label>
+        <input type="range" id="size_slider" name="size_slider" min="5" max="30" value="5" step="1">
+        <label for="segment_slider">Circle Segment Amt:</label>
+        <input type="range" id="segment_slider" name="segment_slider" min="5" max="25" value="5" step="1">
+      </div>
+    </div>
+  </div>
+
+
+  <script src="../lib/webgl-utils.js"></script>
+  <script src="../lib/webgl-debug.js"></script>
+  <script src="../lib/cuon-utils.js"></script>
+  <script src="Point.js"></script>
+  <script src="Triangle.js"></script>
+  <script src="Circle.js"></script>
+  <script src="asgn1.js"></script>
+</body>
+
+</html>
