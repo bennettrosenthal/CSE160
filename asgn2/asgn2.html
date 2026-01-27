@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Bennett Rosenthal Assignment 2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="asgn2.css">
+</head>
+
+<header>
+  <div class="header-div">
+    <div class="left-text">
+      <h1>Assignment 2: Blocky Animal</h1>
+      <h3>by Bennett Rosenthal</h3>
+    </div>
+  </div>
+
+</header>
+
+<body onload="main()">
+
+  <div class="body-div">
+    <div class="canvas-div">
+      <canvas id="webgl" width="400" height="400">
+        Please use a browser that supports "canvas"
+      </canvas>
+    </div>
+
+    <div class="options-div">
+      <div class="clear_div">
+        <button id="clear_button" onclick="clearCanvas()">Clear Canvas</button>
+      </div>
+
+      <div class="rgb-and-preview-div">
+        <div class="rgb_sliders_div">
+          <label for="cam_angle">Cam Angle</label>
+          <input type="range" id="cam_angle" name="cam_angle" min="0" max="180" value="5" oninput="updateAngle()">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script src="./lib/webgl-utils.js"></script>
+  <script src="./lib/webgl-debug.js"></script>
+  <script src="./lib/cuon-utils.js"></script>
+  <script src="./lib/cuon-matrix-cse160.js"></script>
+  <script src="Point.js"></script>
+  <script src="Triangle.js"></script>
+  <script src="Circle.js"></script>
+  <script src="Cube.js"></script>
+  <script src="asgn2.js"></script>
+</body>
+
+</html>
