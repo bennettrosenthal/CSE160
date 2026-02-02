@@ -186,11 +186,13 @@ function renderAllShapes() {
   rightEye.matrix.scale(0.07, 0.11, 0.5);
   rightEye.render();
 
-  var beak = new Cube();
+  var beak = new Cone();
   beak.color = [1.0, 0.7, 0.2, 1.0];
   beak.matrix = rightEyeMat;
-  beak.matrix.translate(-0.3, -0.2, -0.1);
-  beak.matrix.scale(0.4, 0.15, 0.4);
+  beak.matrix.translate(-0.29, -0.25, 0.1);
+  beak.matrix.rotate(270, 1,0,0);
+  
+  beak.matrix.scale(0.4, 0.34, 0.15);
   beak.render();
 
   var feet = new Cube();
