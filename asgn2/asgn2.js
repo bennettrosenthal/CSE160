@@ -134,20 +134,18 @@ function renderAllShapes() {
 
   var globalRotMat = new Matrix4().rotate(g_globalXAngle, 0, 1, 0);
   globalRotMat.rotate(g_globalYAngle, 1,0,0);
+  globalRotMat.translate(0.3, 0, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  //drawTriangle3D( [-1,0,0, -0.5,-1,0, 0,0,0]);
-
   var body = new Cube();
   body.color = [1.0, 1.0, 1.0, 1.0];
   body.matrix.translate(0.15, -0.75, -0.1);
   body.matrix.scale(-0.6, 0.9, 0.5);
   body.render();
-
   var outerBody = new Cube();
   outerBody.color = [0, 0, 0, 1.0];
   outerBody.matrix.translate(-0.6, -0.85, 0);
@@ -157,14 +155,11 @@ function renderAllShapes() {
   var head = new Cube();
   head.color = [1.0, 1.0, 1.0, 1.0];
   head.matrix.setTranslate(0,0,0);
-  
   head.matrix.translate(0.125, 0.25 * g_liftPos, 0.05);
   head.matrix.scale(-0.55, 0.4, 0.5);
-
   head.matrix.translate(0.5, 0.5, 0.5);
   head.matrix.rotate(g_headAngle, 0,1,0);
   head.matrix.translate(-0.5, -0.5, -0.5);
-
   var innerHeadMat = new Matrix4(head.matrix);
   head.render();
   
@@ -180,7 +175,6 @@ function renderAllShapes() {
   leftEye.matrix = innerHeadMat;
   leftEye.matrix.translate(0.6, 0.45, -0.11);
   var leftEyeMat = new Matrix4(leftEye.matrix);
-
   leftEye.matrix.scale(0.07, 0.11, 0.5);
   leftEye.render();
 
@@ -188,7 +182,6 @@ function renderAllShapes() {
   rightEye.color = [0.0, 0.0, 0.0, 1.0];
   rightEye.matrix = leftEyeMat;
   var rightEyeMat = new Matrix4(rightEye.matrix);
-
   rightEye.matrix.translate(-0.25, 0, 0);
   rightEye.matrix.scale(0.07, 0.11, 0.5);
   rightEye.render();
@@ -209,14 +202,11 @@ function renderAllShapes() {
   var leftWing1 = new Cube();
   leftWing1.color = [0.05, 0.05, 0.05, 1];
   leftWing1.wing = 'right';
-
   leftWing1.matrix.setTranslate(0, 0, 0);
   leftWing1.matrix.translate(0.23, 0.17, 0.1);
-
   leftWing1.matrix.rotate(-140, 0, 0, 1);
   leftWing1.matrix.rotate(g_leftWing1Angle, 0, 0, 1);
   var leftWing1Mat = new Matrix4(leftWing1.matrix);
-
   leftWing1.matrix.scale(-0.11, 0.2, 0.5);
   leftWing1.render();
 
@@ -225,11 +215,9 @@ function renderAllShapes() {
   leftWing2.matrix = leftWing1Mat;
   leftWing2.color = [0.05, 0.05, 0.05, 1];
   leftWing2.wing = 'right';
-
   leftWing2.matrix.translate(-0.03, 0.15, 0);
   leftWing2.matrix.rotate(g_leftWing2Angle, 0, 0, 1);
   var leftWing2Mat = new Matrix4(leftWing2.matrix);
-
   leftWing2.matrix.rotate(-40, 0, 0, 1);
   leftWing2.matrix.scale(-0.1, 0.5, 0.5);
   leftWing2.render();
@@ -239,10 +227,8 @@ function renderAllShapes() {
   leftWing3.matrix = leftWing2Mat;
   leftWing3.color = [0.05, 0.05, 0.05, 1];
   leftWing3.wing = 'right';
-
   leftWing3.matrix.translate(0.24, 0.28, 0.1);
   leftWing3.matrix.rotate(g_leftWing3Angle, 0, 0, 1);
-
   leftWing3.matrix.rotate(-40, 0, 0, 1);
   leftWing3.matrix.scale(-0.1, 0.2, 0.35);
   leftWing3.render();
@@ -271,6 +257,20 @@ function renderAllShapes() {
   rightWing3.matrix.rotate(5, 0, 0, 1);
   rightWing3.matrix.scale(0.1, 0.15, 0.5);
   rightWing3.render();
+  
+  var tree = new Cone();
+  tree.color = [0,1,0,1];
+  tree.matrix.translate(-1.2, -0.8, 0);
+  var treeMat = new Matrix4(tree.matrix);
+  tree.matrix.scale(0.3, 0.3, 0.3);
+  tree.render();
+
+  var treeBase = new Cube();
+  treeBase.color = [(135/255), (99/255), (58/255), 1];
+  treeBase.matrix = treeMat;
+  treeBase.matrix.translate(0.12, -0.1, 0.13);
+  treeBase.matrix.scale(0.05, 0.1, 0.05);
+  treeBase.render();
 }
 
 function convertCoordinateEventsToGL(ev) {
@@ -336,8 +336,9 @@ function resetAngleSliders() {
   document.getElementById("wing_joint_slider").value = 0;
   document.getElementById("wing_joint_2_slider").value = 0;
   document.getElementById("wing_joint_3_slider").value = 0;
+  document.getElementById("cam_angle").value = 15;
 
-  g_globalXAngle = 5;
+  g_globalXAngle = 15;
   g_globalYAngle = 0;
   renderAllShapes();
 }
@@ -372,7 +373,7 @@ function main() {
   canvas.onmousemove = click;
 
   // Specify the color for clearing <canvas>
-  gl.clearColor(0.4, 0.0, 0.0, 1.0);
+  gl.clearColor((220/255), (243/255), (255/255), 1);
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 

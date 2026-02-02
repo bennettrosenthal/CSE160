@@ -53,7 +53,7 @@ html, body {
 .rgb_sliders_div {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 100%;
     padding-right: 25px;
 }
 

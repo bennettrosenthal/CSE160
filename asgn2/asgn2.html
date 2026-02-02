@@ -39,19 +39,19 @@
       <div class="rgb-and-preview-div">
         <div class="rgb_sliders_div">
           <label for="cam_angle">Cam Angle</label>
-          <input type="range" id="cam_angle" name="cam_angle" min="0" max="180" value="5" oninput="updateAngle()">
+          <input type="range" id="cam_angle" name="cam_angle" min="0" max="180" value="15" oninput="updateAngle()" style="margin-bottom: 25px;">
 
-          <label for="wing_joint_slider">Wing Joint 1 Rotate</label>
+          <label for="wing_joint_slider">Left Wing Joint 1 Rotate</label>
           <input type="range" id="wing_joint_slider" name="wing_joint_slider" min="0" max="90" value="0" oninput="updateWingJointAngle(1)">
-          <label for="wing_joint__2_slider">Wing Joint 2 Rotate</label>
+          <label for="wing_joint__2_slider">Left Wing Joint 2 Rotate</label>
           <input type="range" id="wing_joint_2_slider" name="wing_joint_2_slider" min="-45" max="90" value="0" oninput="updateWingJointAngle(2)">
-          <label for="wing_joint_3_slider">Wing Joint 3 Rotate</label>
+          <label for="wing_joint_3_slider">Left Wing Joint 3 Rotate</label>
           <input type="range" id="wing_joint_3_slider" name="wing_joint_3_slider" min="-45" max="45" value="0" oninput="updateWingJointAngle(3)">
         </div>
       </div>
 
-      <button id="enable_animation_button" onclick="toggleAnimation()">Toggle Animation</button>
-
+      <button id="enable_animation_button" onclick="toggleAnimation()">Toggle Wing Animation</button>
+      <p>Shift-Click for second animation!</p>
     </div>
   </div>
 
@@ -61,10 +61,9 @@
   <script src="./lib/cuon-utils.js"></script>
   <script src="./lib/cuon-matrix-cse160.js"></script>
   <script src="https://mrdoob.github.io/stats.js/build/stats.min.js"></script>
-  <script src="Point.js"></script>
   <script src="Triangle.js"></script>
-  <script src="Circle.js"></script>
   <script src="Cube.js"></script>
+  <script src="Cone.js"></script>
   <script src="asgn2.js"></script>
 </body>
 
