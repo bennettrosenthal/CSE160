@@ -336,6 +336,7 @@ function drawMap() {
   }
 }
 
+
 function renderAllShapes() {
   var globalRotMat = new Matrix4().rotate(g_globalXAngle, 0, 1, 0);
   globalRotMat.rotate(g_globalYAngle, 1, 0, 0);
@@ -348,7 +349,7 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  var floor = new Cube();
+  let floor = new Cube();
   floor.color = [1, 0, 0, 1];
   floor.textureNum = 1;
   floor.matrix.translate(0, -0.75, 0);
