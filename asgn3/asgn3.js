@@ -66,11 +66,19 @@ let u_Sampler2;
 let g_globalXAngle = 0;
 let g_globalYAngle = 0;
 let g_headAngle = 0;
+let g_mouseX = 0;
 
-let g_camera;
-
+var g_camera;
 var g_startTime = performance.now() / 1000.0;
 var g_seconds = performance.now() / 1000.0 - g_startTime;
+
+var g_map = Array.from({ length: 32 }, (_, row) => 
+  Array.from({ length: 32 }, (_, col) => 
+    (row === 0 || row === 31 || col === 0 || col === 31) ? 1 : 0
+  )
+);
+
+var g_mapCubes = [];
 
 function setupWebGL() {
   // Retrieve <canvas> element
@@ -88,33 +96,34 @@ function setupWebGL() {
 
   canvas.addEventListener("mousemove", (event) => {
     if (event.buttons != 1) {
+      g_mouseX = 0;
       return;
     }
 
-    bbox = canvas.getBoundingClientRect()
+    bbox = canvas.getBoundingClientRect();
+    const x = (event.clientX - bbox.left);
 
-    const x = (event.clientX - bbox.left) - 200;
-    const y = (event.clientY - bbox.top) - 200;
-
-    console.log(`x: ${x}, y: ${y}`);
-    g_globalXAngle = -x % 365;
-    g_globalYAngle = y % 365;
-    renderAllShapes();
-  })
-
-  canvas.addEventListener("click", (event) => {
-    if (event.shiftKey) {
-      console.log("shiftclicked");
-      headAnimating = !headAnimating;
+    if (g_mouseX == 0) {
+      g_mouseX = x;
+      return;
     }
-    canvas.focus();
+
+    const delta = x - g_mouseX;
+    g_mouseX = x;
+
+    const sens = 0.5;
+    const alpha = delta * sens;
+
+    g_camera.pan(alpha);
+
+    renderAllShapes();
   })
 
   document.addEventListener("keydown", (ev) => {
     if (ev.key == "q") { // right arrow
-      g_camera.panLeft();
+      g_camera.pan(g_camera.alpha);
     } else if (ev.key == "e") { // left arrow
-      g_camera.panRight();
+      g_camera.pan(-(g_camera.alpha));
     } else if (ev.key == "w") { // up arrow
       g_camera.forward();
     } else if (ev.key == "s") { // down arrow
@@ -228,7 +237,7 @@ function initTextures(gl, n) {
   image1.onload = function() {
     loadTexture(image1, gl.TEXTURE0, u_Sampler0, 0);
   }
-  image1.src = 'textures\\puma.jpg';
+  image1.src = 'textures\\dirt.jpg';
 
   image2.onload = function() {
     loadTexture(image2, gl.TEXTURE1, u_Sampler1, 1);
@@ -268,16 +277,72 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
+function generateHill(map, centerX, centerY, radius) {
+  const maxHeight = radius + 1;
+  
+  for (let x = centerX - radius; x <= centerX + radius; x++) {
+    for (let y = centerY - radius; y <= centerY + radius; y++) {
+      if (x < 0 || x >= map.length || y < 0 || y >= map[0].length) {
+        continue;
+      }
+      
+      if (x === 0 || x === map.length - 1 || y === 0 || y === map[0].length - 1) {
+        continue;
+      }
+      
+      const dx = x - centerX;
+      const dy = y - centerY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance <= radius) {
+        const height = Math.max(1, Math.round(maxHeight - distance));
+        map[x][y] += height;
+      }
+    }
+  }
+}
+
+function randomizeHills(map, hills, height) {
+  for (i = 0; i < hills; i++) {
+    var x = Math.floor(Math.random() * 31);
+    var y = Math.floor(Math.random() * 31);
+    var r = Math.floor(Math.random() * height);
+    generateHill(map, x, y, r);
+  }
+}
+
+function createMap(map) {
+  g_mapCubes = [];
+  for (i = 0; i < map.length; i++) {
+    for (j = 0; j < map[i].length; j++) {
+      if (map[i][j] != 0) {
+        for (k = 0; k < map[i][j]; k++) {
+          var cube = new Cube();
+          cube.color = [1.0, 1.0, 1.0, 1.0];
+          cube.textureNum = 0;
+          cube.matrix.translate(0, -0.75, 0);
+          cube.matrix.scale(0.5, 0.5, 0.5);
+          cube.matrix.translate(i-16, 1*k, j-16);
+          g_mapCubes.push(cube);
+        }
+      }
+    }
+  }
+}
+
+function drawMap() {
+  for (i = 0; i < g_mapCubes.length; i++) {
+    g_mapCubes[i].render();
+  }
+}
+
 function renderAllShapes() {
-
-  gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projM.elements);
-  gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewM.elements);
-
-  console.log(g_camera.viewM.elements);
-
   var globalRotMat = new Matrix4().rotate(g_globalXAngle, 0, 1, 0);
   globalRotMat.rotate(g_globalYAngle, 1,0,0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
+
+  gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projM.elements);
+  gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewM.elements);
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -287,7 +352,7 @@ function renderAllShapes() {
   floor.color = [1,0,0,1];
   floor.textureNum = 1;
   floor.matrix.translate(0, -0.75, 0);
-  floor.matrix.scale(10,0,10);
+  floor.matrix.scale(15,0,15);
   floor.matrix.translate(-0.5, 0, -0.5);
   floor.render();
 
@@ -298,13 +363,7 @@ function renderAllShapes() {
   sky.matrix.translate(-0.5, -0.5, -0.5);
   sky.render();
 
-  var head = new Cube();
-  head.color = [1.0, 1.0, 1.0, 1.0];
-  head.textureNum = 0;
-  //head.matrix.setTranslate(0,0,0);
-  head.matrix.scale(0.55, 0.4, 0.5);
-  head.matrix.rotate(g_headAngle, 0,1,0);
-  head.render();
+  drawMap();
 }
 
 function convertCoordinateEventsToGL(ev) {
@@ -325,13 +384,33 @@ function clearCanvas() {
   renderAllShapes();
 }
 
-function keydown(ev) {
-
-}
-
 function updateAngle() {
   var angle = document.getElementById("cam_angle").value;
   g_globalXAngle = angle;
+  renderAllShapes();
+}
+
+function regenerateWorld() {
+  var hills = document.getElementById("hill_field").value;
+  var height = document.getElementById("height_field").value;
+  
+  g_map = Array.from({ length: 32 }, (_, row) => 
+    Array.from({ length: 32 }, (_, col) => 
+      (row === 0 || row === 31 || col === 0 || col === 31) ? 1 : 0
+    )
+  );
+  
+  randomizeHills(g_map, hills, height);
+  createMap(g_map);
+  renderAllShapes();
+}
+
+function addHills() {
+  var hills = document.getElementById("hill_field").value;
+  var height = document.getElementById("height_field").value;
+  
+  randomizeHills(g_map, hills, height);
+  createMap(g_map);
   renderAllShapes();
 }
 
@@ -345,6 +424,7 @@ function main() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  regenerateWorld();
   updateAngle();
   tick();
 }

@@ -37,20 +37,34 @@
         <div class="rgb_sliders_div">
           <label for="cam_angle">Cam Angle</label>
           <input type="range" id="cam_angle" name="cam_angle" min="0" max="360" value="0" oninput="updateAngle()" style="margin-bottom: 25px;">
+          <label for="hill_field">Number of Hills: </label>
+          <input type="field" id="hill_field" name="hill_field" min="0" max="10" value="5" style="margin-bottom: 25px;">
+          <label for="height_field">Max Height of Hills: </label>
+          <input type="field" id="height_field" name="height_field" min="0" max="10" value="5" style="margin-bottom: 25px;">
+          <button onclick="addHills()" style="margin-bottom: 25px;">Add Hills to World Using Current Settings</button>
+          <button onclick="regenerateWorld()" style="margin-bottom: 25px;">Re-generate World!</button>
         </div>
+      </div>
+
+      <div class="story-text">
+        <h3>Story:</h3>
+        <p>You are a HILL INSPECTOR attempting to ensure that each hill is stable and that there's nothing unusual inside. Peek inside each hill and make sure that it's all dirt!</p>
       </div>
 
       <div class="controls-text">
         <h3>Controls:</h3>
-        <p>W/A/S/D: Move Forward/Left/Backward/Right<br>Q/E: Rotate Left/Right</p>
+        <p><span style="font-weight: bold;">W/A/S/D:</span> Move Forward/Left/Backward/Right<br><span style="font-weight: bold;">Q/E or Click-and-Drag:</span> Rotate Left/Right</p>
       </div>
 
     </div>
   </div>
 
-  <h2>Resources</h2>
-  <p>I followed the YouTube tutorials for the majority of the framework and was able to design and animate the penguin without significant outside resources. For the non-cube primitive, I used Claude to detail the algorithm for rendering a cone and implemented it by hand based on its description. My esteemed friend Thomas came up with the brilliant idea of making the beak a cone.</p>
-
+  <div class="extra-text">
+    <h2>Wow Criteria</h2>
+    <p>I created a custom hill generator that creates a hill of a random height given a position. I give this function some default values and generate the world with them, and you can re-generate or add to the world using those same parameters. The algorithm adds to any blocks already placed in the world, so generation can get pretty crazy if you spam it a bunch!</p>
+    <h2>Resources</h2>
+    <p>I utilized Prof's YouTube tutorials for the bulk of the project. For the hill generation, I got the distance formula from Google and inferred the rest of the logic myself.</p>
+  </div>
 
   <script src="./lib/webgl-utils.js"></script>
   <script src="./lib/webgl-debug.js"></script>

@@ -88,3 +88,9 @@ html, body {
     display: flex;
     flex-direction: column;
 }
+
+.extra-text {
+    align-items: center;
+    padding-left: 15%;
+    padding-right: 15%;
+}

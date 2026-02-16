@@ -4,8 +4,12 @@ class Triangle {
     this.color = [1,1,1,1];
     this.size = 5;
     this.type = "Triangle";
-    this.buffer = null;
-    this.uvBuffer = null;
+    this.buffer = gl.createBuffer();
+    this.uvBuffer = gl.createBuffer();
+  
+    if (!this.buffer || !this.uvBuffer) {
+      console.log("Failed to create buffer objects");
+    }
   }
 
   render() {
@@ -91,12 +95,14 @@ function drawTriangle3DUV(vertices, uv) {
   // Enable the assignment to a_Position variable
   gl.enableVertexAttribArray(a_Position);
 
-  var uvBuffer = gl.createBuffer();
-  if (!uvBuffer) {
-    console.log("Failed to create uvBuffer object");
-    return -1;
+  if (this.uvBuffer == null) {
+    this.uvBuffer = gl.createBuffer();
+    if (!this.uvBuffer) {
+      console.log("Failed to create the buffer object");
+      return -1;
+    }
   }
-  gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.DYNAMIC_DRAW);
   gl.vertexAttribPointer(a_UV, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(a_UV);
