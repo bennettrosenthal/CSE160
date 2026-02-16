@@ -72,8 +72,8 @@ var g_camera;
 var g_startTime = performance.now() / 1000.0;
 var g_seconds = performance.now() / 1000.0 - g_startTime;
 
-var g_map = Array.from({ length: 32 }, (_, row) => 
-  Array.from({ length: 32 }, (_, col) => 
+var g_map = Array.from({ length: 32 }, (_, row) =>
+  Array.from({ length: 32 }, (_, col) =>
     (row === 0 || row === 31 || col === 0 || col === 31) ? 1 : 0
   )
 );
@@ -234,17 +234,17 @@ function initTextures(gl, n) {
     return false;
   }
 
-  image1.onload = function() {
+  image1.onload = function () {
     loadTexture(image1, gl.TEXTURE0, u_Sampler0, 0);
   }
   image1.src = 'textures\\dirt.jpg';
 
-  image2.onload = function() {
+  image2.onload = function () {
     loadTexture(image2, gl.TEXTURE1, u_Sampler1, 1);
   }
   image2.src = 'textures\\floor.jpg';
-  
-  image3.onload = function() {
+
+  image3.onload = function () {
     loadTexture(image3, gl.TEXTURE2, u_Sampler2, 2);
   }
   image3.src = 'textures\\sky.png';
@@ -279,21 +279,21 @@ function tick() {
 
 function generateHill(map, centerX, centerY, radius) {
   const maxHeight = radius + 1;
-  
+
   for (let x = centerX - radius; x <= centerX + radius; x++) {
     for (let y = centerY - radius; y <= centerY + radius; y++) {
       if (x < 0 || x >= map.length || y < 0 || y >= map[0].length) {
         continue;
       }
-      
+
       if (x === 0 || x === map.length - 1 || y === 0 || y === map[0].length - 1) {
         continue;
       }
-      
+
       const dx = x - centerX;
       const dy = y - centerY;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      
+
       if (distance <= radius) {
         const height = Math.max(1, Math.round(maxHeight - distance));
         map[x][y] += height;
@@ -322,7 +322,7 @@ function createMap(map) {
           cube.textureNum = 0;
           cube.matrix.translate(0, -0.75, 0);
           cube.matrix.scale(0.5, 0.5, 0.5);
-          cube.matrix.translate(i-16, 1*k, j-16);
+          cube.matrix.translate(i - 16, 1 * k, j - 16);
           g_mapCubes.push(cube);
         }
       }
@@ -338,7 +338,7 @@ function drawMap() {
 
 function renderAllShapes() {
   var globalRotMat = new Matrix4().rotate(g_globalXAngle, 0, 1, 0);
-  globalRotMat.rotate(g_globalYAngle, 1,0,0);
+  globalRotMat.rotate(g_globalYAngle, 1, 0, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projM.elements);
@@ -349,17 +349,17 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   var floor = new Cube();
-  floor.color = [1,0,0,1];
+  floor.color = [1, 0, 0, 1];
   floor.textureNum = 1;
   floor.matrix.translate(0, -0.75, 0);
-  floor.matrix.scale(15,0,15);
+  floor.matrix.scale(15, 0, 15);
   floor.matrix.translate(-0.5, 0, -0.5);
   floor.render();
 
   var sky = new Cube();
   sky.color = [0.37, 0.81, 1, 1];
   sky.textureNum = -2;
-  sky.matrix.scale(50,50,50);
+  sky.matrix.scale(50, 50, 50);
   sky.matrix.translate(-0.5, -0.5, -0.5);
   sky.render();
 
@@ -393,13 +393,13 @@ function updateAngle() {
 function regenerateWorld() {
   var hills = document.getElementById("hill_field").value;
   var height = document.getElementById("height_field").value;
-  
-  g_map = Array.from({ length: 32 }, (_, row) => 
-    Array.from({ length: 32 }, (_, col) => 
+
+  g_map = Array.from({ length: 32 }, (_, row) =>
+    Array.from({ length: 32 }, (_, col) =>
       (row === 0 || row === 31 || col === 0 || col === 31) ? 1 : 0
     )
   );
-  
+
   randomizeHills(g_map, hills, height);
   createMap(g_map);
   renderAllShapes();
@@ -408,11 +408,45 @@ function regenerateWorld() {
 function addHills() {
   var hills = document.getElementById("hill_field").value;
   var height = document.getElementById("height_field").value;
-  
+
   randomizeHills(g_map, hills, height);
   createMap(g_map);
   renderAllShapes();
 }
+
+function csvToArray(csv) {
+  rows = csv.split("\n");
+
+  return rows.map(function (row) {
+    return row.split(",");
+  });
+}
+
+function exportMap() {
+  let csvContent = "data:text/csv;charset=utf-8,"
+    + g_map.map(e => e.join(",")).join("\n");
+  var encodedUri = encodeURI(csvContent);
+  window.open(encodedUri);
+}
+
+function importMap(csv) {
+  g_map = csv;
+  createMap(g_map);
+  renderAllShapes();
+}
+
+const fileInput = document.getElementById('csv')
+const readFile = () => {
+  const reader = new FileReader()
+  reader.onload = () => {
+    var res = csvToArray(reader.result);
+    importMap(res);
+  }
+  // start reading the file. When it is done, calls the onload event defined above.
+  reader.readAsBinaryString(fileInput.files[0])
+}
+
+fileInput.addEventListener('change', readFile)
 
 function main() {
   setupWebGL();
@@ -420,7 +454,7 @@ function main() {
   initTextures(gl, 0);
 
   // Specify the color for clearing <canvas>
-  gl.clearColor((220/255), (243/255), (255/255), 1);
+  gl.clearColor((220 / 255), (243 / 255), (255 / 255), 1);
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
