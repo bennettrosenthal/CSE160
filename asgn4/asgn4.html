@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Bennett Rosenthal Assignment 4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="asgn4.css">
+</head>
+
+<header>
+  <div class="header-div">
+    <div class="left-text">
+      <h1>Assignment 4: Lighting</h1>
+      <h3>by Bennett Rosenthal</h3>
+    </div>
+  </div>
+
+</header>
+
+<body onload="main()">
+
+  <div class="body-div">
+    <div class="canvas-div">
+      <canvas id="webgl" width="400" height="400">
+        Please use a browser that supports "canvas"
+      </canvas>
+    </div>
+
+    <div class="options-div">
+
+      <div class="rgb-and-preview-div">
+        <div class="rgb_sliders_div">
+          <label for="cam_angle">Cam Angle</label>
+          <input type="range" id="cam_angle" name="cam_angle" min="0" max="360" value="0" oninput="updateAngle()" style="margin-bottom: 25px;">
+          <p style="margin-bottom: 25px;">
+            <button id="normal_toggle" onclick="toggleNormals()" >Toggle Normals</button>
+            <button id="light_toggle" onclick="toggleLight()" >Turn Light On/Off</button>
+            <button id="light_animation_toggle" onclick="toggleLightAnimation()" >Toggle Light Animation</button>
+          </p>
+          
+          <label for="light_x">Light X:</label>
+          <input type="range" id="light_x" name="light_x" min="-500" max="500" value="0" oninput="updateLightPos()" style="margin-bottom: 25px;">
+          <label for="light_y">Light Y:</label>
+          <input type="range" id="light_y" name="light_y" min="-500" max="500" value="0.03" oninput="updateLightPos()" style="margin-bottom: 25px;">
+          <label for="light_z">Light Z:</label>
+          <input type="range" id="light_z" name="light_z" min="-500" max="500" value="0.02" oninput="updateLightPos()" style="margin-bottom: 25px;">
+        </div>
+      </div>
+
+      <div class="controls-text">
+        <h3>Controls:</h3>
+        <p><span style="font-weight: bold;">W/A/S/D:</span> Move Forward/Left/Backward/Right<br><span style="font-weight: bold;">Q/E or Click-and-Drag:</span> Rotate Left/Right</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="extra-text">
+    <h2>Resources</h2>
+    <p>I utilized Prof's YouTube tutorials for the project.</p>
+  </div>
+
+  <script src="./lib/webgl-utils.js"></script>
+  <script src="./lib/webgl-debug.js"></script>
+  <script src="./lib/cuon-utils.js"></script>
+  <script src="./lib/cuon-matrix-cse160.js"></script>
+  <script src="https://mrdoob.github.io/stats.js/build/stats.min.js"></script>
+  <script src="https://unpkg.com"></script>
+  <script src="./shapes/Triangle.js"></script>
+  <script src="./shapes/Cube.js"></script>
+  <script src="./shapes/Cone.js"></script>
+  <script src="./shapes/Animal.js"></script>
+  <script src="./shapes/Camera.js"></script>
+  <script src="./shapes/Sphere.js"></script>
+  <script src="asgn4.js"></script>
+</body>
+
+</html>
